@@ -1,0 +1,3601 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Holden Design</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/monday-sdk-js@0.5.9/dist/main.js"></script>
+
+    <style>
+      @font-face {
+        font-family: "Geist";
+        src: url("https://cdn.jsdelivr.net/npm/geist@1.7.2/dist/fonts/geist-sans/Geist-Variable.woff2")
+          format("woff2-variations");
+        font-weight: 100 900;
+        font-style: normal;
+        font-display: swap;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      :root {
+        --navy: #071827;
+        --brand-blue: #0099e1;
+
+        --bg: #f5f7f9;
+        --surface: #ffffff;
+        --surface-muted: #f8fafc;
+        --surface-hover: #f2f7fa;
+        --surface-active: #eef8fd;
+
+        --text: #17202a;
+        --text-muted: #64748b;
+        --text-soft: #475569;
+        --header-text: #ffffff;
+        --header-muted: #bfd0dc;
+        --header-hover: #102b40;
+
+        --border: #dce3ea;
+        --border-strong: #c8d3dc;
+        --focus-ring: rgba(0, 153, 225, 0.22);
+
+        --warning-bg: #fff7e6;
+        --warning-border: #f2cf83;
+        --warning-text: #704600;
+
+        --danger: #b42318;
+        --mark-bg: #fff2b8;
+
+        --status-green: #00c875;
+        --status-green-text: #073b24;
+        --status-amber: #fdab3d;
+        --status-amber-text: #3d2a05;
+        --status-red: #df2f4a;
+        --status-red-text: #ffffff;
+        --status-blue: #579bfc;
+        --status-blue-text: #071827;
+        --status-teal: #175a63;
+        --status-teal-text: #ffffff;
+        --status-draft: #bca58a;
+        --status-draft-text: #071827;
+        --status-slate: #9aadbd;
+        --status-slate-text: #17222b;
+        --status-muted: #757575;
+        --status-muted-text: #ffffff;
+
+        --skeleton-base: #edf1f4;
+        --skeleton-shine: #f8fafc;
+        --new-highlight: #e6f7ff;
+        --shadow-color: rgba(7, 24, 39, 0.14);
+
+        --space-1: 4px;
+        --space-2: 8px;
+        --space-3: 12px;
+        --space-4: 16px;
+        --space-5: 20px;
+        --space-6: 24px;
+
+        --radius-sm: 6px;
+        --radius-md: 8px;
+
+        --transition: 150ms ease;
+        --shadow: 0 4px 14px var(--shadow-color);
+      }
+
+      html {
+        color-scheme: light;
+      }
+
+      body {
+        min-width: 360px;
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: "Geist", sans-serif;
+        font-size: 13px;
+        line-height: 1.4;
+      }
+
+      button,
+      input,
+      select {
+        font: inherit;
+      }
+
+      button {
+        appearance: none;
+      }
+
+      button:focus-visible,
+      input:focus-visible,
+      select:focus-visible {
+        outline: 2px solid var(--brand-blue);
+        outline-offset: 2px;
+      }
+
+      button:disabled,
+      select:disabled {
+        cursor: not-allowed;
+      }
+
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      .hdr {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        min-height: 52px;
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+        padding: var(--space-2) var(--space-4);
+        border-bottom: 1px solid var(--header-hover);
+        background: var(--navy);
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        flex: 0 0 auto;
+      }
+
+      .proj-info {
+        min-width: 0;
+        color: var(--header-text);
+      }
+
+      .proj-title {
+        overflow: hidden;
+        font-size: 14px;
+        font-weight: 750;
+        line-height: 1.2;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .header-tools {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: var(--space-2);
+        min-width: 0;
+        margin-left: auto;
+      }
+
+      .search-shell {
+        position: relative;
+        width: min(280px, 34vw);
+        min-width: 180px;
+      }
+
+      .hierarchy-search {
+        width: 100%;
+        height: 34px;
+        padding: 0 34px 0 var(--space-3);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius-sm);
+        background: var(--surface);
+        color: var(--navy);
+        font-size: 12px;
+        outline: none;
+      }
+
+      .hierarchy-search::placeholder {
+        color: var(--text-muted);
+      }
+
+      .hierarchy-search:focus {
+        border-color: var(--brand-blue);
+        box-shadow: 0 0 0 3px var(--focus-ring);
+      }
+      .hierarchy-search::-webkit-search-cancel-button {
+        -webkit-appearance: none;
+        appearance: none;
+        display: none;
+      }
+
+      .clear-search {
+        position: absolute;
+        top: 50%;
+        right: var(--space-1);
+        width: 28px;
+        height: 28px;
+        padding: 0;
+        border: 0;
+        border-radius: var(--radius-sm);
+        background: transparent;
+        color: var(--text-muted);
+        cursor: pointer;
+        font-size: 17px;
+        line-height: 1;
+        transform: translateY(-50%);
+      }
+
+      .clear-search:hover {
+        background: var(--surface-hover);
+        color: var(--navy);
+      }
+
+      .clear-search[hidden] {
+        display: none;
+      }
+
+      .search-results {
+        min-width: 56px;
+        color: var(--header-muted);
+        font-size: 11px;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+
+      .hierarchy-control-button {
+        height: 34px;
+        padding: 0 var(--space-3);
+        border: 1px solid var(--header-muted);
+        border-radius: var(--radius-sm);
+        background: transparent;
+        color: var(--header-text);
+        cursor: pointer;
+        font-size: 11px;
+        font-weight: 650;
+        white-space: nowrap;
+        transition:
+          background var(--transition),
+          border-color var(--transition);
+      }
+
+      .hierarchy-control-button:hover {
+        border-color: var(--header-text);
+        background: var(--header-hover);
+      }
+
+      #app {
+        width: min(1440px, 100%);
+        margin: 0 auto;
+        padding: var(--space-4);
+      }
+
+      .app-notice {
+        margin-bottom: var(--space-3);
+        padding: var(--space-2) var(--space-3);
+        border: 1px solid var(--warning-border);
+        border-radius: var(--radius-sm);
+        background: var(--warning-bg);
+        color: var(--warning-text);
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .app-notice[hidden] {
+        display: none;
+      }
+
+      #packages {
+        display: grid;
+        gap: var(--space-2);
+      }
+
+      .hierarchy-project {
+        overflow: hidden;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        background: var(--surface);
+      }
+
+      .tree-row {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--space-3);
+        margin: 0;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        color: var(--text);
+        cursor: pointer;
+        text-align: left;
+        transition:
+          background var(--transition),
+          color var(--transition);
+      }
+
+      .tree-row:hover {
+        background: var(--surface-hover);
+      }
+
+      .project-row {
+        min-height: 44px;
+        padding: var(--space-2) var(--space-3);
+      }
+
+      .hierarchy-project.is-open > .project-row {
+        background: var(--surface-active);
+      }
+
+      .hierarchy-children {
+        padding: var(--space-2) var(--space-2) var(--space-2) var(--space-5);
+        border-top: 1px solid var(--border);
+        background: var(--surface);
+      }
+
+      .hierarchy-section-title,
+      .revision-inline-title {
+        color: var(--text-muted);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      .hierarchy-section-title {
+        padding: var(--space-1) var(--space-2) var(--space-2);
+      }
+
+      .hierarchy-package-branch {
+        margin-left: var(--space-2);
+        padding-left: var(--space-3);
+        border-left: 1px solid var(--border);
+      }
+
+      .hierarchy-package-branch + .hierarchy-package-branch {
+        margin-top: var(--space-1);
+      }
+
+      .hierarchy-package-row-shell {
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+      }
+
+      .package-row {
+        min-height: 40px;
+        flex: 1;
+        padding: var(--space-2);
+        border-radius: var(--radius-sm);
+      }
+
+      .hierarchy-package-branch.is-open
+        > .hierarchy-package-row-shell
+        .package-row {
+        background: var(--surface-active);
+      }
+
+      .hierarchy-package-content {
+        margin-left: var(--space-4);
+        padding: var(--space-1) 0 var(--space-2) var(--space-3);
+        border-left: 1px solid var(--border);
+      }
+
+      .hierarchy-deliverables {
+        display: grid;
+        gap: var(--space-1);
+      }
+
+      .deliverable-branch {
+        margin-left: var(--space-2);
+        padding-left: var(--space-3);
+        border-left: 1px solid var(--border);
+      }
+
+      .deliverable-row {
+        min-height: 38px;
+        padding: var(--space-1) var(--space-2);
+        border-radius: var(--radius-sm);
+      }
+
+      .deliverable-branch.is-open > .deliverable-row {
+        background: var(--surface-active);
+      }
+
+      .item-main,
+      .deliverable-main {
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+        min-width: 0;
+      }
+
+      .item-right,
+      .deliverable-right {
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+        flex: 0 0 auto;
+      }
+
+      .item-name,
+      .deliverable-name {
+        min-width: 0;
+        overflow: hidden;
+        color: var(--navy);
+        font-size: 13px;
+        font-weight: 680;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .project-row .item-name {
+        font-weight: 760;
+      }
+
+      .item-meta {
+        color: var(--text-muted);
+        font-size: 11px;
+        font-weight: 550;
+        white-space: nowrap;
+      }
+
+      .hierarchy-chevron {
+        width: 14px;
+        flex: 0 0 14px;
+        color: var(--text-muted);
+        font-size: 11px;
+        line-height: 1;
+        text-align: center;
+        transition:
+          transform var(--transition),
+          color var(--transition);
+      }
+
+      .hierarchy-chevron.open {
+        color: var(--brand-blue);
+        transform: rotate(90deg);
+      }
+
+      .deliverable-type {
+        padding: 2px var(--space-2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        background: var(--surface-muted);
+        color: var(--text-muted);
+        font-size: 11px;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+
+      .inline-add-toggle {
+        height: 28px;
+        padding: 0 var(--space-2);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius-sm);
+        background: var(--surface);
+        color: var(--navy);
+        cursor: pointer;
+        font-size: 11px;
+        font-weight: 650;
+        white-space: nowrap;
+      }
+
+      .inline-add-toggle:hover {
+        border-color: var(--brand-blue);
+        color: var(--brand-blue);
+      }
+
+      .inline-add-deliverable {
+        display: grid;
+        grid-template-columns: minmax(180px, 1fr) 160px auto auto;
+        align-items: start;
+        gap: var(--space-2);
+        margin: var(--space-1) 0 var(--space-3);
+        padding: var(--space-2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        background: var(--surface-muted);
+      }
+
+      .form-field {
+        min-width: 0;
+      }
+
+      .inline-add-deliverable input,
+      .inline-add-deliverable select {
+        width: 100%;
+        height: 32px;
+        padding: 0 var(--space-2);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius-sm);
+        background: var(--surface);
+        color: var(--navy);
+        font-size: 12px;
+        outline: none;
+      }
+
+      .inline-add-deliverable input:focus,
+      .inline-add-deliverable select:focus {
+        border-color: var(--brand-blue);
+        box-shadow: 0 0 0 3px var(--focus-ring);
+      }
+
+      .field-error,
+      .form-error {
+        margin-top: var(--space-1);
+        color: var(--danger);
+        font-size: 11px;
+        font-weight: 600;
+      }
+
+      .field-error:empty,
+      .form-error:empty {
+        display: none;
+      }
+
+      .form-error {
+        grid-column: 1 / -1;
+        margin-top: 0;
+      }
+
+      .button-primary,
+      .button-secondary {
+        height: 32px;
+        padding: 0 var(--space-3);
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        font-size: 11px;
+        font-weight: 700;
+      }
+
+      .button-primary {
+        border: 1px solid var(--navy);
+        background: var(--navy);
+        color: var(--header-text);
+      }
+
+      .button-primary:hover:not(:disabled) {
+        background: var(--header-hover);
+      }
+
+      .button-secondary {
+        border: 1px solid var(--border-strong);
+        background: var(--surface);
+        color: var(--navy);
+      }
+
+      .button-secondary:hover:not(:disabled) {
+        border-color: var(--brand-blue);
+        color: var(--brand-blue);
+      }
+
+      .revision-inline {
+        margin: var(--space-1) 0 var(--space-3) var(--space-5);
+      }
+
+      .revision-inline-title {
+        padding: var(--space-1) 0 var(--space-2);
+      }
+
+      .revision-table-wrap {
+        overflow: hidden;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        background: var(--surface);
+      }
+
+      .revision-table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+        background: var(--surface);
+        font-size: 12px;
+      }
+
+      .revision-table th,
+      .revision-table td {
+        height: 36px;
+        padding: var(--space-1) var(--space-2);
+        border-bottom: 1px solid var(--border);
+        text-align: left;
+        vertical-align: middle;
+      }
+
+      .revision-table th {
+        background: var(--surface-muted);
+        color: var(--text-muted);
+        font-size: 11px;
+        font-weight: 700;
+      }
+
+      .revision-table tbody tr:last-child td {
+        border-bottom: 0;
+      }
+
+      .revision-table tbody tr:hover {
+        background: var(--surface-hover);
+      }
+
+      .revision-row-current {
+        background: var(--surface-active);
+      }
+
+      .revision-row-current td:first-child {
+        border-left: 3px solid var(--brand-blue);
+      }
+
+      .revision-row-superseded {
+        background: var(--surface-muted);
+      }
+
+      .revision-row-superseded td {
+        color: var(--text-muted);
+      }
+
+      .revision-code-cell {
+        white-space: nowrap;
+      }
+
+      .revision-code {
+        color: var(--navy);
+        font-weight: 750;
+      }
+
+      .current-badge,
+      .superseded-badge {
+        display: inline-flex;
+        align-items: center;
+        margin-left: var(--space-2);
+        padding: 1px var(--space-2);
+        border-radius: var(--radius-sm);
+        font-size: 11px;
+        font-weight: 700;
+        white-space: nowrap;
+      }
+
+      .current-badge {
+        background: var(--brand-blue);
+        color: var(--navy);
+      }
+
+      .superseded-badge {
+        background: var(--border);
+        color: var(--text-soft);
+      }
+
+      .status-cell {
+        min-width: 0;
+      }
+
+      .status-control {
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+        min-width: 0;
+      }
+
+      .status-received-select,
+      .action-select {
+        height: 28px;
+        min-width: 0;
+        padding: 0 var(--space-2);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius-sm);
+        background: var(--surface);
+        color: var(--navy);
+        cursor: pointer;
+        font-size: 11px;
+        font-weight: 680;
+        outline: none;
+      }
+
+      .status-received-select {
+        width: 120px;
+      }
+
+      .action-select {
+        width: 180px;
+      }
+
+      .status-received-select:focus,
+      .action-select:focus {
+        border-color: var(--brand-blue);
+        box-shadow: 0 0 0 3px var(--focus-ring);
+      }
+
+      .status-received-select:disabled,
+      .action-select:disabled {
+        border-style: dashed;
+        cursor: not-allowed;
+        filter: saturate(0.45);
+      }
+
+      .status-green {
+        border-color: var(--status-green);
+        background: var(--status-green);
+        color: var(--status-green-text);
+      }
+
+      .status-amber {
+        border-color: var(--status-amber);
+        background: var(--status-amber);
+        color: var(--status-amber-text);
+      }
+
+      .status-red {
+        border-color: var(--status-red);
+        background: var(--status-red);
+        color: var(--status-red-text);
+      }
+
+      .status-blue {
+        border-color: var(--status-blue);
+        background: var(--status-blue);
+        color: var(--status-blue-text);
+      }
+
+      .status-teal {
+        border-color: var(--status-teal);
+        background: var(--status-teal);
+        color: var(--status-teal-text);
+      }
+
+      .status-draft {
+        border-color: var(--status-draft);
+        background: var(--status-draft);
+        color: var(--status-draft-text);
+      }
+
+      .status-slate {
+        border-color: var(--status-slate);
+        background: var(--status-slate);
+        color: var(--status-slate-text);
+      }
+
+      .status-muted {
+        border-color: var(--status-muted);
+        background: var(--status-muted);
+        color: var(--status-muted-text);
+      }
+
+      .save-indicator {
+        display: none;
+        align-items: center;
+        gap: var(--space-1);
+        color: var(--text-muted);
+        font-size: 11px;
+        white-space: nowrap;
+      }
+
+      .save-indicator.visible {
+        display: inline-flex;
+      }
+
+      .save-spinner {
+        width: 12px;
+        height: 12px;
+        border: 2px solid var(--border);
+        border-top-color: var(--brand-blue);
+        border-radius: 50%;
+        animation: save-spin 650ms linear infinite;
+      }
+
+      @keyframes save-spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .hierarchy-empty,
+      .state-panel {
+        padding: var(--space-4);
+        color: var(--text-muted);
+        font-size: 12px;
+      }
+
+      .state-panel {
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        background: var(--surface);
+      }
+
+      .state-panel h2 {
+        margin: 0 0 var(--space-1);
+        color: var(--navy);
+        font-size: 14px;
+      }
+
+      .state-panel p {
+        margin: 0 0 var(--space-3);
+      }
+
+      .skeleton-row {
+        height: 44px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        background: linear-gradient(
+          90deg,
+          var(--skeleton-base) 25%,
+          var(--skeleton-shine) 50%,
+          var(--skeleton-base) 75%
+        );
+        background-size: 200% 100%;
+        animation: skeleton-loading 1.2s linear infinite;
+      }
+
+      @keyframes skeleton-loading {
+        to {
+          background-position: -200% 0;
+        }
+      }
+
+      .deliverable-branch.is-new > .deliverable-row {
+        animation: new-deliverable-highlight 1.6s ease;
+      }
+
+      @keyframes new-deliverable-highlight {
+        0%,
+        55% {
+          background: var(--new-highlight);
+        }
+
+        100% {
+          background: transparent;
+        }
+      }
+
+      mark {
+        padding: 0 1px;
+        border-radius: 2px;
+        background: var(--mark-bg);
+        color: inherit;
+      }
+
+      .search-field-match {
+        box-shadow: 0 0 0 2px var(--mark-bg);
+      }
+
+      .toast {
+        position: fixed;
+        right: var(--space-4);
+        bottom: var(--space-4);
+        z-index: 1000;
+        max-width: min(420px, calc(100vw - 32px));
+        padding: var(--space-3) var(--space-4);
+        border-left: 4px solid var(--brand-blue);
+        border-radius: var(--radius-md);
+        background: var(--navy);
+        color: var(--header-text);
+        box-shadow: var(--shadow);
+        font-size: 12px;
+        transform: translateY(12px);
+        opacity: 0;
+        pointer-events: none;
+        transition:
+          opacity var(--transition),
+          transform var(--transition);
+      }
+
+      .toast.visible {
+        transform: translateY(0);
+        opacity: 1;
+      }
+
+      .toast.error {
+        border-left-color: var(--status-red);
+      }
+
+      .toast.warning {
+        border-left-color: var(--status-amber);
+      }
+
+      .toast.success {
+        border-left-color: var(--status-green);
+      }
+
+      @media (max-width: 760px) {
+        .hdr {
+          flex-wrap: wrap;
+        }
+
+        .header-tools {
+          width: 100%;
+          flex: 1 1 100%;
+          justify-content: flex-start;
+        }
+
+        .search-shell {
+          flex: 1 1 200px;
+          width: auto;
+        }
+
+        .inline-add-deliverable {
+          grid-template-columns: minmax(0, 1fr) 140px auto auto;
+        }
+      }
+
+      @media (max-width: 640px) {
+        #app {
+          padding: var(--space-3);
+        }
+
+        .search-results {
+          display: none;
+        }
+
+        .hierarchy-children {
+          padding-left: var(--space-3);
+        }
+
+        .hierarchy-package-branch {
+          margin-left: var(--space-1);
+          padding-left: var(--space-2);
+        }
+
+        .hierarchy-package-content {
+          margin-left: var(--space-2);
+          padding-left: var(--space-2);
+        }
+
+        .deliverable-branch {
+          margin-left: var(--space-1);
+          padding-left: var(--space-2);
+        }
+
+        .revision-inline {
+          margin-left: var(--space-2);
+        }
+
+        .inline-add-deliverable {
+          grid-template-columns: 1fr 1fr;
+        }
+
+        .form-error {
+          grid-column: 1 / -1;
+        }
+
+        .revision-table-wrap {
+          overflow: visible;
+          border: 0;
+          background: transparent;
+        }
+
+        .revision-table,
+        .revision-table tbody {
+          display: block;
+        }
+
+        .revision-table thead {
+          display: none;
+        }
+
+        .revision-table tr {
+          display: grid;
+          margin-bottom: var(--space-2);
+          padding: var(--space-2);
+          border: 1px solid var(--border);
+          border-radius: var(--radius-md);
+          background: var(--surface);
+        }
+
+        .revision-table th,
+        .revision-table td {
+          height: auto;
+          border: 0;
+        }
+
+        .revision-table td {
+          display: grid;
+          grid-template-columns: 108px minmax(0, 1fr);
+          align-items: center;
+          gap: var(--space-2);
+          padding: var(--space-1);
+        }
+
+        .revision-table td::before {
+          content: attr(data-label);
+          color: var(--text-muted);
+          font-size: 11px;
+          font-weight: 700;
+        }
+
+        .revision-row-current td:first-child {
+          border-left: 0;
+        }
+
+        .revision-row-current {
+          border-left: 3px solid var(--brand-blue) !important;
+          background: var(--surface-active) !important;
+        }
+
+        .status-control {
+          width: 100%;
+        }
+
+        .status-received-select,
+        .action-select {
+          width: 100%;
+        }
+      }
+
+      @media (max-width: 460px) {
+        .header-tools {
+          gap: var(--space-1);
+        }
+
+        .search-shell {
+          flex-basis: 100%;
+        }
+
+        .hierarchy-control-button {
+          flex: 1;
+        }
+
+        .inline-add-deliverable {
+          grid-template-columns: 1fr;
+        }
+
+        .form-error {
+          grid-column: 1;
+        }
+
+        .item-right {
+          gap: var(--space-1);
+        }
+
+        .item-meta {
+          white-space: normal;
+          text-align: right;
+        }
+
+        .revision-table td {
+          grid-template-columns: 92px minmax(0, 1fr);
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          scroll-behavior: auto !important;
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="hdr">
+      <div class="logo">
+        <svg
+          viewBox="0 0 137 28"
+          xmlns="http://www.w3.org/2000/svg"
+          style="height: 20px; width: auto; display: block"
+        >
+          <path
+            d="m40.5 26.72 0.7019-0.2226 0.2981-0.1084 1-0.3199 1-0.2392 1-0.665 1-0.5591 0.122-0.1084 0.878-0.5838 1.416-1.416 0.5838-0.7534 0.2226-0.2466 0.4449-1 0.3325-0.4441 0.3841-0.5559 0.2318-1 0.3841-0.8368 0.1084-0.1632 0.2241-1 0.1675-1v-1-1-1l-0.1159-1-0.2757-1-0.1084-0.287-0.2319-0.713-0.3107-1-0.4574-0.7363-0.2319-0.2637-0.4356-1-0.9163-1-1.416-1.416-0.7534-0.5838-0.2466-0.2226-1-0.5455-0.2637-0.2319-0.7363-0.4574-1-0.2101-0.8038-0.3325-0.1962-0.1084-1-0.2241-1-0.1675h-1-1l-1 0.0426-1 0.1249-1 0.3286-0.0063 0.0039-0.9937 0.3841-1 0.2834-1 0.665-1 0.5591-0.1084 0.1084-0.8916 0.6159-0.4162 0.3841-0.9163 1-0.6675 0.9961-0.0039 0.0039-0.5678 1-0.4283 0.7235-0.2226 0.2765-0.3109 1-0.2346 1-0.2319 0.5133-0.2226 0.4867-0.1099 1v1 1 1l0.2241 1 0.1084 0.287 0.2319 0.713 0.2346 1 0.3109 1 0.2226 0.2765 0.4704 0.7235 0.5296 0.874 0.1084 0.126 0.669 1 1.223 1.223 1 0.669 0.126 0.1084 0.874 0.5296 0.7235 0.4704 0.2765 0.2226 1 0.3109 1 0.2346 0.5133 0.2319 0.4867 0.2226 1 0.1099h1 1 1l1-0.1099zm94-1.218 0.0039-0.0045v-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1l-0.0039-0.0128-0.2319-0.9872-0.1964-1-0.1876-1-0.3841-0.6737-0.2319-0.3263-0.5455-1-0.2226-0.2466-0.7534-0.7534-0.2466-0.2226-1-0.669-0.126-0.1084-0.874-0.4574-1-0.3107-0.713-0.2319-0.287-0.1084-1-0.2241h-1-1l-1 0.1099-0.7019 0.2226-0.2981 0.1084-1 0.3199-1 0.2392-0.3994 0.3325-0.6006 0.4704-0.5749 0.5296-1 1-0.4251 0.5-0.3841 0.5-0.384 1-0.2319 0.5133-0.2226 0.4867-0.1615 1-0.1159 1v1 1 1 1 1 1 1 1 1 1 1 1 1 1l0.1159 1 0.3841 0.5 0.4251 0.5 0.5749 0.4909 1 0.1766h1l1-0.2681 0.3325-0.3994v-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1l0.1249-1 0.4342-1 1.108-1.108 1-0.4342 1-0.2348 1-0.1142 1 0.2241 1 0.2392 0.6006 0.4283 0.3994 0.3629 0.5091 0.6371 0.4909 0.7363 0.2319 0.2637 0.1006 1v1 1 1 1 1 1 1 1 1 1 1 1 1 1l0.134 1 0.5335 0.7681 0.2319 0.2319 0.7681 0.5717 1 0.0958h1l1-0.663zm-114 0.9994 0.0128-0.0039 0.9872-0.3775 0.3325-0.6225v-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1l-0.1099-1-0.2226-0.3147-0.4251-0.6853-0.5749-0.4909-1-0.1766h-1l-1 0.2234-0.3325 0.4441v1 1 1 1 1 1 1 1l-0.2234 1-0.4441 0.3325h-1-1-1-1-1-1-1-1l-0.4441-0.3325-0.2234-1v-1-1-1-1-1-1l-0.2241-1-0.1084-0.122-0.5838-0.878-0.4162-0.4162-1-0.2513h-1-1l-0.5 0.6675v1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1l0.0426 1 0.4574 0.7363 0.2319 0.2637 0.7681 0.5717 1 0.3199 0.9688 0.1084 0.0312 0.0039 0.0128-0.0039 0.9872-0.3775 0.3325-0.6225v-1-1-1-1-1-1-1-1-1l0.6675-0.6675h1 1 1 1 1 1 1 1l0.6675 0.6675v1 1 1 1 1 1 1l0.1099 1 0.2226 0.3147 0.4251 0.6853 0.5749 0.5296 1 0.362 0.9688 0.1084 0.0312 0.0039zm60 0 0.0312-0.0039 0.9688-0.1084 1-0.2241 1-0.0958 1-0.1876 0.8368-0.3841 0.1632-0.1084 1-0.4007 0.7363-0.4909 0.2637-0.2319 1.768-1.768 0.2319-0.2637 0.4909-0.7363 0.5091-0.7534 0.2226-0.2466 0.2683-1 0.2772-1 0.2319-0.713 0.1084-0.287 0.2241-1 0.1249-1 0.0426-1v-1l-0.0426-1-0.1249-1-0.2241-1-0.1084-0.287-0.2319-0.713-0.2772-1-0.2683-1-0.2226-0.2466-0.5091-0.7534-0.4909-0.7363-0.2319-0.2637-1-1-0.7681-0.6675-0.3713-0.3325-0.6287-0.4574-1-0.3107-0.3775-0.2319-0.6225-0.3325-2-0.335h-1-1-1-1-1-1-1-1-1-1l-1 0.2681-0.3325 0.3994v1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1l0.3286 1 0.0039 0.0039 1 0.3286h1 1 1l0.3325-0.3325 0.1675-1v-1-1-1-1-1-1-1-1-1-1-1-1l0.5-0.6675h1 1 1 1l1 0.1249 1 0.1143 1 0.3199 0.126 0.1084 0.874 0.4909 0.5838 0.5091 0.4162 0.4162 0.5091 0.5838 0.487 1 0.0039 0.0052 0.4283 0.9948 0.1143 1 0.1249 1v1 1l-0.0516 1-0.1159 1-0.2681 1-0.2319 0.5133-0.2226 0.4867-0.4449 1-0.3325 0.3713-0.6287 0.6287-0.3713 0.3325-1 0.4449-0.4867 0.2226-0.5133 0.2319-1 0.2346-1 0.0335h-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1l-1-0.0335-1-0.3581-0.1084-0.1084-0.8877-1-0.0039-0.0078-0.3325-0.9922-0.0958-1-0.0717-1v-1-1-1-1-1-1-1-1-1-1-1-1-1l-0.0426-1-0.4574-0.7363-0.2319-0.2637-0.7681-0.5717-1-0.0958h-1l-1 0.6623-0.0039 0.0052v1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1l0.0039 0.0128 0.2319 0.9872 0.1522 1 0.2834 1 0.665 1 0.6675 0.7681 0.2319 0.2319 0.7681 0.6159 0.6853 0.3841 0.3147 0.2226 1 0.3109 1 0.134 1 0.2241 0.9688 0.1084 0.0312 0.0039h1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1zm29 0 0.0062-0.0039 0.9938-0.3841 0.7681-0.6159 0.2319-0.2637 0.4574-0.7363 0.0426-1v-1l-0.5-0.5h-1-1-1-1-1-1-1-1l-1-0.0335-1-0.2346-0.2637-0.2319-0.7363-0.7363-0.2319-0.2637-0.2346-1-0.0335-1v-1l0.1675-1 0.3325-0.3325h1 1 1 1 1 1 1 1l1-0.6636 0.0039-0.0039v-1-1l-0.0039-0.0312-0.1084-0.9688-0.8916-0.5h-1-1-1-1-1-1-1-1l-0.5-0.5v-1-1l0.0335-1 0.3581-1 0.1084-0.126 1-0.8701 0.0062-0.0039 0.9938-0.3841 1-0.1159h1 1 1 1 1 1 1 1l0.5-0.5v-1l-0.0426-1-0.4574-0.7363-0.2319-0.2637-0.7681-0.5717-1-0.0958h-1-1-1-1-1-1-1l-1 0.0516-1 0.1585-1 0.2348-0.2765 0.2226-0.7235 0.4704-0.7363 0.5296-0.2637 0.2319-0.6159 0.7681-0.3841 0.5559-0.3325 0.4441-0.2834 1-0.2757 1-0.1084 0.9688-0.0039 0.0312v1 1 1 1 1 1 1 1 1 1 1 1l0.0039 0.0063 0.3841 0.9937 0.1585 1 0.4574 0.6287 0.3325 0.3713 0.6675 0.7681 0.2319 0.2319 0.7681 0.6159 0.6853 0.3841 0.3147 0.2226 1 0.3109 1 0.134 1 0.2241 0.9688 0.1084 0.0312 0.0039h1 1 1 1 1 1zm-68.49-5.004-0.5133 0.2319-1 0.2681-1 0.0426h-1l-1-0.0761-1-0.2346-0.3775-0.2319-0.6225-0.3325-1-0.4356-0.2637-0.2319-0.7363-0.5749-0.4251-0.4251-0.5749-0.7363-0.2319-0.2637-0.4356-1-0.3325-0.6225-0.2319-0.3775-0.2346-1-0.0335-1v-1l0.0335-1 0.2346-1 0.2319-0.3775 0.3325-0.6225 0.335-1 0.3325-0.3713 0.5749-0.6287 0.4251-0.4251 0.6287-0.5749 0.3713-0.3325 1-0.4449 0.3147-0.2226 0.6853-0.3841 1-0.1585 1-0.1249h1l1 0.1249 1 0.1143 0.9948 0.4283 0.0052 0.0039 1 0.5257 0.5457 0.4704 0.4543 0.4162 0.5838 0.5838 0.4162 0.4543 0.4704 0.5457 0.5257 1 0.0039 0.0052 0.4283 0.9948 0.1143 1 0.1249 1v1l-0.1249 1-0.1143 1-0.4283 0.7235-0.2226 0.2765-0.3933 1-0.3841 0.4251-0.4909 0.5749-0.5091 0.5091-0.6287 0.4909-0.3713 0.3325-1 0.4449-0.4867 0.2226z"
+            fill="#44C8E8"
+            fill-rule="evenodd"
+          />
+        </svg>
+      </div>
+
+      <div class="proj-info">
+        <div class="proj-title">Design Management</div>
+      </div>
+
+      <div class="header-tools">
+        <div class="search-shell">
+          <label class="sr-only" for="hierarchySearch">Search design</label>
+          <input
+            id="hierarchySearch"
+            class="hierarchy-search"
+            type="search"
+            placeholder="Search design, revisions, status..."
+            value=""
+            autocomplete="off"
+          />
+
+          <button
+            id="clearSearchButton"
+            class="clear-search"
+            type="button"
+            data-action="clear-search"
+            aria-label="Clear search"
+            title="Clear search"
+            hidden
+          >
+            ×
+          </button>
+        </div>
+
+        <span
+          id="searchResults"
+          class="search-results"
+          aria-live="polite"
+        ></span>
+
+        <button
+          id="expandToggle"
+          class="hierarchy-control-button"
+          type="button"
+          data-action="toggle-all"
+        >
+          Expand all
+        </button>
+      </div>
+    </div>
+
+    <main id="app">
+      <div id="appNotice" class="app-notice" role="status" hidden></div>
+
+      <div id="packages"></div>
+    </main>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <script>
+      const monday = window.mondaySdk();
+
+      const CONFIG = {
+        projectsBoard: "5100469221",
+        packagesBoard: "5100466592",
+        packagesSubitemBoard: "5100466841",
+        revisionsBoard: "5100466600",
+        revisionsSubitemBoard: "5102512378",
+
+        packageCategoryColumn: "dropdown_mm5bqa8j",
+        projectPackagesRelation: "board_relation_mm5a7nn3",
+
+        revisionDeliverableRelation: "board_relation_mm5ae5am",
+        revisionVersionColumn: "dropdown_mm6krj3c",
+        statusReceivedColumn: "color_mm6k5xec",
+      };
+
+      async function loadAppData() {
+        const query = `
+          query (
+            $projectsBoard: [ID!]!,
+            $revisionsBoard: [ID!]!
+          ) {
+            projectBoards: boards(ids: $projectsBoard) {
+              items_page(limit: 100) {
+                items {
+                  id
+                  name
+
+                  column_values(ids: ["board_relation_mm5a7nn3"]) {
+                    ... on BoardRelationValue {
+                      linked_items {
+                        id
+                        name
+
+                        subitems {
+                          id
+                          name
+
+                          column_values(ids: ["dropdown_mm5bqa8j"]) {
+                            id
+                            text
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+
+            revisionBoards: boards(ids: $revisionsBoard) {
+              items_page(limit: 100) {
+                items {
+                  id
+                  name
+
+                  column_values(ids: ["board_relation_mm5ae5am"]) {
+                    ... on BoardRelationValue {
+                      linked_item_ids
+                    }
+                  }
+
+                              subitems {
+                    id
+                    name
+
+                    column_values(
+                      ids: [
+                        "text_mm6k63yk",
+                        "date_mm6krfrv",
+                        "color_mm6k5xec",
+                        "color_mm6v5zh2",
+                        "dropdown_mm6krj3c"
+                      ]
+                    ) {
+                      id
+                      text
+                    }
+                  }
+                }
+              }
+            }
+          }
+        `;
+
+        const response = await monday.api(query, {
+          apiVersion: "2026-07",
+          variables: {
+            projectsBoard: [CONFIG.projectsBoard],
+            revisionsBoard: [CONFIG.revisionsBoard],
+          },
+        });
+
+        console.log("APP DATA RESPONSE:", response);
+
+        if (response.errors) {
+          throw new Error(JSON.stringify(response.errors, null, 2));
+        }
+
+        const projectItems = response.data.projectBoards[0].items_page.items;
+
+        const revisions = response.data.revisionBoards[0].items_page.items;
+
+        const projects = projectItems.map((project) => ({
+          id: project.id,
+          name: project.name,
+          packages: project.column_values[0]?.linked_items || [],
+        }));
+
+        const limitWarnings = [];
+
+        if (projectItems.length === 100) {
+          limitWarnings.push(
+            "The project query reached its 100-item limit; additional projects may not be shown.",
+          );
+        }
+
+        if (revisions.length === 100) {
+          limitWarnings.push(
+            "The revisions query reached its 100-item limit; additional revisions may not be shown.",
+          );
+        }
+
+        paginationWarning = limitWarnings.join(" ");
+
+        return {
+          projects,
+          revisions,
+        };
+      }
+
+      async function createDeliverable(packageId, name, category) {
+        // STEP 1 — create the deliverable
+        const createQuery = `
+          mutation (
+            $parentId: ID!,
+            $name: String!
+          ) {
+            create_subitem(
+              parent_item_id: $parentId,
+              item_name: $name
+            ) {
+              id
+              name
+            }
+          }
+        `;
+
+        const createResponse = await monday.api(createQuery, {
+          apiVersion: "2026-07",
+          variables: {
+            parentId: packageId,
+            name: name,
+          },
+        });
+
+        const deliverable = createResponse.data.create_subitem;
+
+        // STEP 2 — update Category separately
+        const categoryQuery = `
+          mutation (
+            $boardId: ID!,
+            $itemId: ID!,
+            $columnId: String!,
+            $value: String!
+          ) {
+            change_simple_column_value(
+              board_id: $boardId,
+              item_id: $itemId,
+              column_id: $columnId,
+              value: $value
+            ) {
+              id
+            }
+          }
+        `;
+
+        try {
+          const categoryResponse = await monday.api(categoryQuery, {
+            apiVersion: "2026-07",
+            variables: {
+              boardId: CONFIG.packagesSubitemBoard,
+              itemId: deliverable.id,
+              columnId: CONFIG.packageCategoryColumn,
+              value: category,
+            },
+          });
+
+          if (categoryResponse.errors) {
+            throw new Error(JSON.stringify(categoryResponse.errors));
+          }
+        } catch (error) {
+          const categoryError =
+            error instanceof Error ? error : new Error(String(error));
+
+          categoryError.partialDeliverable = deliverable;
+
+          throw categoryError;
+        }
+
+        return deliverable;
+      }
+
+      let appData = null;
+      let isSyncing = false;
+      let searchTerm = "";
+      let searchTimer = null;
+      let paginationWarning = "";
+      let saveInFlightCount = 0;
+      let highlightDeliverableId = null;
+      let liveSyncStarted = false;
+      let interactionsStarted = false;
+      let toastTimer = null;
+
+      let revisionByDeliverableId = new Map();
+      let revisionSubitemById = new Map();
+
+      let searchIndex = [];
+      let searchResults = [];
+
+      const matchedProjectIds = new Set();
+      const matchedPackageIds = new Set();
+      const matchedDeliverableIds = new Set();
+      const matchedRevisionIds = new Set();
+
+      const searchScoreByProjectId = new Map();
+      const searchScoreByPackageId = new Map();
+      const searchScoreByDeliverableId = new Map();
+
+      const expandedProjectIds = new Set();
+      const expandedPackageIds = new Set();
+      const expandedDeliverableIds = new Set();
+      const openAddFormPackageIds = new Set();
+
+      const UI_SETTINGS = Object.freeze({
+        autoCollapseProjectSiblings: false,
+      });
+
+      const STATUS_CLASSES = [
+        "status-green",
+        "status-amber",
+        "status-red",
+        "status-blue",
+        "status-teal",
+        "status-draft",
+        "status-slate",
+        "status-muted",
+      ];
+
+      const HTML_ESCAPES = {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;",
+      };
+
+      function escapeHtml(value) {
+        return String(value ?? "").replace(
+          /[&<>"']/g,
+          (character) => HTML_ESCAPES[character],
+        );
+      }
+
+      function domId(value) {
+        return String(value ?? "").replace(/[^a-zA-Z0-9_-]/g, "-");
+      }
+
+      function normaliseSearch(value) {
+        return String(value ?? "")
+          .normalize("NFKD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, " ")
+          .trim();
+      }
+
+      function getSearchTokens(value = searchTerm) {
+        return normaliseSearch(value).split(/\s+/).filter(Boolean);
+      }
+
+      function highlightMatch(value) {
+        const rawValue = String(value ?? "");
+
+        if (!searchTerm) {
+          return escapeHtml(rawValue);
+        }
+
+        const tokens = getSearchTokens().filter((token) => token.length > 0);
+        const lowerValue = rawValue.toLowerCase();
+        const ranges = [];
+
+        for (const token of tokens) {
+          let fromIndex = 0;
+          let matchIndex = lowerValue.indexOf(token, fromIndex);
+
+          while (matchIndex !== -1) {
+            ranges.push([matchIndex, matchIndex + token.length]);
+            fromIndex = matchIndex + token.length;
+            matchIndex = lowerValue.indexOf(token, fromIndex);
+          }
+        }
+
+        if (!ranges.length) {
+          return valueMatchesSearch(rawValue)
+            ? `<mark>${escapeHtml(rawValue)}</mark>`
+            : escapeHtml(rawValue);
+        }
+
+        ranges.sort((a, b) => a[0] - b[0] || b[1] - a[1]);
+
+        const mergedRanges = [];
+
+        for (const range of ranges) {
+          const previous = mergedRanges[mergedRanges.length - 1];
+
+          if (!previous || range[0] > previous[1]) {
+            mergedRanges.push([...range]);
+          } else {
+            previous[1] = Math.max(previous[1], range[1]);
+          }
+        }
+
+        let cursor = 0;
+        let html = "";
+
+        for (const [startIndex, endIndex] of mergedRanges) {
+          html += escapeHtml(rawValue.slice(cursor, startIndex));
+          html += `<mark>${escapeHtml(
+            rawValue.slice(startIndex, endIndex),
+          )}</mark>`;
+          cursor = endIndex;
+        }
+
+        html += escapeHtml(rawValue.slice(cursor));
+
+        return html;
+      }
+
+      function boundedEditDistance(a, b, maxDistance) {
+        if (a === b) {
+          return 0;
+        }
+
+        if (Math.abs(a.length - b.length) > maxDistance) {
+          return maxDistance + 1;
+        }
+
+        let previous = Array.from(
+          { length: b.length + 1 },
+          (_, index) => index,
+        );
+
+        for (let i = 1; i <= a.length; i += 1) {
+          const current = [i];
+          let rowMinimum = current[0];
+
+          for (let j = 1; j <= b.length; j += 1) {
+            const substitutionCost = a[i - 1] === b[j - 1] ? 0 : 1;
+
+            const value = Math.min(
+              previous[j] + 1,
+              current[j - 1] + 1,
+              previous[j - 1] + substitutionCost,
+            );
+
+            current[j] = value;
+            rowMinimum = Math.min(rowMinimum, value);
+          }
+
+          if (rowMinimum > maxDistance) {
+            return maxDistance + 1;
+          }
+
+          previous = current;
+        }
+
+        return previous[b.length];
+      }
+
+      function scoreTokenAgainstValue(token, normalisedValue, fieldWeight = 0) {
+        if (!token || !normalisedValue) {
+          return 0;
+        }
+
+        if (normalisedValue === token) {
+          return 130 + fieldWeight;
+        }
+
+        const words = normalisedValue.split(" ").filter(Boolean);
+
+        if (words.includes(token)) {
+          return 115 + fieldWeight;
+        }
+
+        if (words.some((word) => word.startsWith(token))) {
+          return 95 + fieldWeight;
+        }
+
+        if (normalisedValue.startsWith(token)) {
+          return 90 + fieldWeight;
+        }
+
+        if (normalisedValue.includes(token)) {
+          return 70 + fieldWeight;
+        }
+
+        if (token.length < 4) {
+          return 0;
+        }
+
+        const maxDistance = token.length >= 8 ? 2 : 1;
+        let bestDistance = maxDistance + 1;
+
+        for (const word of words) {
+          if (Math.abs(word.length - token.length) > maxDistance) {
+            continue;
+          }
+
+          bestDistance = Math.min(
+            bestDistance,
+            boundedEditDistance(token, word, maxDistance),
+          );
+
+          if (bestDistance === 1) {
+            break;
+          }
+        }
+
+        return bestDistance <= maxDistance
+          ? 48 + fieldWeight - bestDistance * 6
+          : 0;
+      }
+
+      function valueMatchesSearch(value) {
+        if (!searchTerm) {
+          return false;
+        }
+
+        const normalisedValue = normaliseSearch(value);
+
+        return getSearchTokens().some(
+          (token) => scoreTokenAgainstValue(token, normalisedValue) > 0,
+        );
+      }
+
+      function getColumnText(item, columnId) {
+        return (
+          item?.column_values?.find((column) => column.id === columnId)?.text ||
+          ""
+        );
+      }
+
+      function addSearchIndexRecord({
+        project,
+        pkg = null,
+        deliverable = null,
+        revision = null,
+      }) {
+        const category = deliverable
+          ? getColumnText(deliverable, CONFIG.packageCategoryColumn)
+          : "";
+
+        const revisionCode = getColumnText(revision, "text_mm6k63yk");
+        const dateIssued = getColumnText(revision, "date_mm6krfrv");
+        const statusReceived = getColumnText(
+          revision,
+          CONFIG.statusReceivedColumn,
+        );
+        const action = getColumnText(revision, "color_mm6v5zh2");
+        const version = getColumnText(revision, CONFIG.revisionVersionColumn);
+
+        const fields = [
+          { value: project?.name, weight: 22 },
+          { value: pkg?.name, weight: 24 },
+          { value: deliverable?.name, weight: 30 },
+          { value: category, weight: 14 },
+          { value: revisionCode, weight: 34 },
+          { value: dateIssued, weight: 8 },
+          { value: formatDate(dateIssued), weight: 8 },
+          { value: statusReceived, weight: 12 },
+          { value: action, weight: 12 },
+          { value: version, weight: 8 },
+        ]
+          .map((field) => ({
+            value: normaliseSearch(field.value),
+            weight: field.weight,
+          }))
+          .filter((field) => field.value);
+
+        searchIndex.push({
+          projectId: String(project.id),
+          packageId: pkg ? String(pkg.id) : null,
+          deliverableId: deliverable ? String(deliverable.id) : null,
+          revisionId: revision ? String(revision.id) : null,
+          fields,
+          searchText: fields.map((field) => field.value).join(" "),
+        });
+      }
+
+      function buildSearchIndex() {
+        searchIndex = [];
+
+        for (const project of appData?.projects || []) {
+          const packages = project.packages || [];
+
+          if (!packages.length) {
+            addSearchIndexRecord({ project });
+            continue;
+          }
+
+          for (const pkg of packages) {
+            const deliverables = pkg.subitems || [];
+
+            if (!deliverables.length) {
+              addSearchIndexRecord({ project, pkg });
+              continue;
+            }
+
+            for (const deliverable of deliverables) {
+              const revisionRecord = revisionByDeliverableId.get(
+                String(deliverable.id),
+              );
+
+              const revisions = revisionRecord?.subitems || [];
+
+              if (!revisions.length) {
+                addSearchIndexRecord({ project, pkg, deliverable });
+                continue;
+              }
+
+              for (const revision of revisions) {
+                addSearchIndexRecord({
+                  project,
+                  pkg,
+                  deliverable,
+                  revision,
+                });
+              }
+            }
+          }
+        }
+      }
+
+      function scoreSearchRecord(record, query, tokens) {
+        let score = 0;
+
+        for (const token of tokens) {
+          let tokenScore = 0;
+
+          for (const field of record.fields) {
+            tokenScore = Math.max(
+              tokenScore,
+              scoreTokenAgainstValue(token, field.value, field.weight),
+            );
+          }
+
+          if (!tokenScore) {
+            return 0;
+          }
+
+          score += tokenScore;
+        }
+
+        if (query && record.searchText.includes(query)) {
+          score += 60;
+        }
+
+        return score;
+      }
+
+      function searchRecords(term) {
+        const query = normaliseSearch(term);
+        const tokens = getSearchTokens(query);
+
+        if (!tokens.length) {
+          return [];
+        }
+
+        return searchIndex
+          .map((record) => ({
+            record,
+            score: scoreSearchRecord(record, query, tokens),
+          }))
+          .filter((result) => result.score > 0)
+          .sort((a, b) => b.score - a.score);
+      }
+
+      function setHighestScore(map, id, score) {
+        map.set(id, Math.max(map.get(id) || 0, score));
+      }
+
+      function buildSearchVisibility() {
+        matchedProjectIds.clear();
+        matchedPackageIds.clear();
+        matchedDeliverableIds.clear();
+        matchedRevisionIds.clear();
+
+        searchScoreByProjectId.clear();
+        searchScoreByPackageId.clear();
+        searchScoreByDeliverableId.clear();
+
+        for (const result of searchResults) {
+          const { record, score } = result;
+
+          matchedProjectIds.add(record.projectId);
+          setHighestScore(searchScoreByProjectId, record.projectId, score);
+
+          if (record.packageId) {
+            matchedPackageIds.add(record.packageId);
+            setHighestScore(searchScoreByPackageId, record.packageId, score);
+          }
+
+          if (record.deliverableId) {
+            matchedDeliverableIds.add(record.deliverableId);
+            setHighestScore(
+              searchScoreByDeliverableId,
+              record.deliverableId,
+              score,
+            );
+          }
+
+          if (record.revisionId) {
+            matchedRevisionIds.add(record.revisionId);
+          }
+        }
+      }
+
+      function refreshSearchResults() {
+        if (!searchTerm) {
+          searchResults = [];
+          buildSearchVisibility();
+          return;
+        }
+
+        searchResults = searchRecords(searchTerm);
+        buildSearchVisibility();
+      }
+
+      function runSearch(value) {
+        searchTerm = normaliseSearch(value);
+        refreshSearchResults();
+      }
+
+      function sortBySearchScore(items, scoreMap) {
+        if (!searchTerm) {
+          return items;
+        }
+
+        return [...items].sort(
+          (a, b) =>
+            (scoreMap.get(String(b.id)) || 0) -
+            (scoreMap.get(String(a.id)) || 0),
+        );
+      }
+
+      function rebuildDataIndexes() {
+        revisionByDeliverableId = new Map();
+        revisionSubitemById = new Map();
+
+        for (const revisionRecord of appData?.revisions || []) {
+          for (const column of revisionRecord.column_values || []) {
+            for (const linkedItemId of column.linked_item_ids || []) {
+              revisionByDeliverableId.set(String(linkedItemId), revisionRecord);
+            }
+          }
+
+          for (const revision of revisionRecord.subitems || []) {
+            revisionSubitemById.set(String(revision.id), revision);
+          }
+        }
+      }
+
+      function setAppData(data) {
+        appData = data;
+        rebuildDataIndexes();
+        buildSearchIndex();
+        refreshSearchResults();
+      }
+
+      function updateLocalRevisionColumn(revisionSubitemId, columnId, value) {
+        const revision = revisionSubitemById.get(String(revisionSubitemId));
+
+        if (!revision) {
+          return;
+        }
+
+        const column = revision.column_values?.find(
+          (item) => item.id === columnId,
+        );
+
+        if (column) {
+          column.text = value || "";
+        }
+      }
+
+      function applyStatusClass(element, value) {
+        if (!element) {
+          return;
+        }
+
+        element.classList.remove(...STATUS_CLASSES);
+
+        const statusClass = getStatusClass(value);
+
+        if (statusClass) {
+          element.classList.add(statusClass);
+        }
+      }
+
+      function setControlTitle(selectElement, title) {
+        if (!selectElement) {
+          return;
+        }
+
+        selectElement.title = title;
+
+        const wrapper = selectElement.closest(".status-control");
+
+        if (wrapper) {
+          wrapper.title = title;
+        }
+      }
+
+      function syncRowControls(row) {
+        if (!row) {
+          return;
+        }
+
+        const version = row.dataset.version || "";
+        const isSuperseded = version === "Superseded";
+
+        const actionSelect = row.querySelector(".action-select");
+        const statusSelect = row.querySelector(".status-received-select");
+
+        const actionSaving = actionSelect?.dataset.saving === "true";
+
+        const statusSaving = statusSelect?.dataset.saving === "true";
+
+        if (actionSelect) {
+          actionSelect.disabled = isSuperseded || actionSaving;
+
+          setControlTitle(
+            actionSelect,
+            isSuperseded
+              ? "Superseded revisions cannot be changed"
+              : actionSaving
+                ? "Saving change"
+                : "Action",
+          );
+        }
+
+        if (statusSelect) {
+          const action = actionSelect?.value || "";
+
+          const statusDisabled =
+            isSuperseded || action !== "Issued" || actionSaving || statusSaving;
+
+          statusSelect.disabled = statusDisabled;
+
+          let title = "Status Received";
+
+          if (isSuperseded) {
+            title = "Superseded revisions cannot be changed";
+          } else if (actionSaving) {
+            title = "Wait for Action to finish saving";
+          } else if (action !== "Issued") {
+            title = "Available once Action is Issued";
+          } else if (statusSaving) {
+            title = "Saving change";
+          }
+
+          setControlTitle(statusSelect, title);
+        }
+      }
+
+      function setSavingState(selectElement, isSaving) {
+        if (!selectElement) {
+          return;
+        }
+
+        selectElement.dataset.saving = isSaving ? "true" : "false";
+
+        const wrapper = selectElement.closest(".status-control");
+
+        const indicator = wrapper?.querySelector(".save-indicator");
+
+        if (indicator) {
+          indicator.classList.toggle("visible", isSaving);
+        }
+
+        syncRowControls(selectElement.closest("tr"));
+      }
+
+      function showToast(message, type = "error") {
+        const toast = document.getElementById("toast");
+
+        if (!toast) {
+          return;
+        }
+
+        window.clearTimeout(toastTimer);
+
+        toast.textContent = message;
+        toast.className = `toast ${type} visible`;
+
+        toastTimer = window.setTimeout(() => {
+          toast.classList.remove("visible");
+        }, 4000);
+      }
+
+      function renderPaginationWarning() {
+        const notice = document.getElementById("appNotice");
+
+        if (!notice) {
+          return;
+        }
+
+        notice.textContent = paginationWarning;
+        notice.hidden = !paginationWarning;
+      }
+
+      async function updateStatusReceived(
+        revisionSubitemId,
+        status,
+        deliverableId,
+        selectElement,
+      ) {
+        const query = `
+          mutation (
+            $boardId: ID!,
+            $itemId: ID!,
+            $columnId: String!,
+            $value: String!
+          ) {
+            change_simple_column_value(
+              board_id: $boardId,
+              item_id: $itemId,
+              column_id: $columnId,
+              value: $value
+            ) {
+              id
+            }
+          }
+        `;
+
+        const previousValue = selectElement.dataset.currentValue || "";
+
+        expandedDeliverableIds.add(String(deliverableId));
+
+        selectElement.dataset.currentValue = status;
+
+        updateLocalRevisionColumn(
+          revisionSubitemId,
+          CONFIG.statusReceivedColumn,
+          status,
+        );
+        buildSearchIndex();
+        refreshSearchResults();
+
+        applyStatusClass(selectElement, status);
+
+        saveInFlightCount += 1;
+        setSavingState(selectElement, true);
+
+        try {
+          const response = await monday.api(query, {
+            apiVersion: "2026-07",
+            variables: {
+              boardId: CONFIG.revisionsSubitemBoard,
+              itemId: revisionSubitemId,
+              columnId: CONFIG.statusReceivedColumn,
+              value: status,
+            },
+          });
+
+          if (response.errors) {
+            throw new Error(JSON.stringify(response.errors));
+          }
+        } catch (error) {
+          console.error("Failed to update Status Received:", error);
+
+          selectElement.value = previousValue;
+          selectElement.dataset.currentValue = previousValue;
+
+          updateLocalRevisionColumn(
+            revisionSubitemId,
+            CONFIG.statusReceivedColumn,
+            previousValue,
+          );
+          buildSearchIndex();
+          refreshSearchResults();
+
+          applyStatusClass(selectElement, previousValue);
+
+          showToast(
+            "Status Received was not saved. The previous value has been restored.",
+          );
+        } finally {
+          saveInFlightCount = Math.max(0, saveInFlightCount - 1);
+
+          setSavingState(selectElement, false);
+        }
+      }
+
+      function handleSearchInput(value) {
+        const clearButton = document.getElementById("clearSearchButton");
+
+        if (clearButton) {
+          clearButton.hidden = !value;
+        }
+
+        window.clearTimeout(searchTimer);
+
+        searchTimer = window.setTimeout(() => {
+          runSearch(value);
+          renderWorkspace();
+        }, 200);
+      }
+
+      function clearSearch() {
+        window.clearTimeout(searchTimer);
+
+        runSearch("");
+
+        const searchInput = document.getElementById("hierarchySearch");
+
+        if (searchInput) {
+          searchInput.value = "";
+        }
+
+        const clearButton = document.getElementById("clearSearchButton");
+
+        if (clearButton) {
+          clearButton.hidden = true;
+        }
+
+        renderWorkspace();
+      }
+
+      function projectHasSearchMatch(project) {
+        return !searchTerm || matchedProjectIds.has(String(project.id));
+      }
+
+      function getVisiblePackages(project) {
+        const packages = project.packages || [];
+
+        if (!searchTerm) {
+          return packages;
+        }
+
+        return sortBySearchScore(
+          packages.filter((pkg) => matchedPackageIds.has(String(pkg.id))),
+          searchScoreByPackageId,
+        );
+      }
+
+      function getVisibleDeliverables(project, pkg) {
+        const deliverables = pkg.subitems || [];
+
+        if (!searchTerm) {
+          return deliverables;
+        }
+
+        return sortBySearchScore(
+          deliverables.filter((deliverable) =>
+            matchedDeliverableIds.has(String(deliverable.id)),
+          ),
+          searchScoreByDeliverableId,
+        );
+      }
+
+      function countSearchResults() {
+        return searchTerm ? searchResults.length : 0;
+      }
+
+      function areAllExpanded() {
+        if (!appData?.projects?.length) {
+          return false;
+        }
+
+        return appData.projects.every(
+          (project) =>
+            expandedProjectIds.has(String(project.id)) &&
+            (project.packages || []).every(
+              (pkg) =>
+                expandedPackageIds.has(String(pkg.id)) &&
+                (pkg.subitems || []).every((deliverable) =>
+                  expandedDeliverableIds.has(String(deliverable.id)),
+                ),
+            ),
+        );
+      }
+
+      function updateToolbarState() {
+        const toggle = document.getElementById("expandToggle");
+
+        const results = document.getElementById("searchResults");
+
+        if (toggle) {
+          toggle.textContent = areAllExpanded() ? "Collapse all" : "Expand all";
+        }
+
+        if (results) {
+          const count = countSearchResults();
+
+          results.textContent = searchTerm
+            ? `${count} ${count === 1 ? "result" : "results"}`
+            : "";
+        }
+      }
+
+      function expandAll() {
+        expandedProjectIds.clear();
+        expandedPackageIds.clear();
+        expandedDeliverableIds.clear();
+
+        for (const project of appData?.projects || []) {
+          expandedProjectIds.add(String(project.id));
+
+          for (const pkg of project.packages || []) {
+            expandedPackageIds.add(String(pkg.id));
+
+            for (const deliverable of pkg.subitems || []) {
+              expandedDeliverableIds.add(String(deliverable.id));
+            }
+          }
+        }
+
+        renderWorkspace();
+      }
+
+      function collapseAll() {
+        expandedProjectIds.clear();
+        expandedPackageIds.clear();
+        expandedDeliverableIds.clear();
+
+        renderWorkspace();
+      }
+
+      function toggleAll() {
+        if (areAllExpanded()) {
+          collapseAll();
+        } else {
+          expandAll();
+        }
+      }
+
+      function toggleProject(projectId) {
+        const id = String(projectId);
+
+        if (expandedProjectIds.has(id)) {
+          expandedProjectIds.delete(id);
+        } else {
+          if (UI_SETTINGS.autoCollapseProjectSiblings) {
+            expandedProjectIds.clear();
+          }
+
+          expandedProjectIds.add(id);
+        }
+
+        renderWorkspace();
+      }
+
+      function togglePackage(projectId, packageId) {
+        const id = String(packageId);
+
+        if (expandedPackageIds.has(id)) {
+          expandedPackageIds.delete(id);
+        } else {
+          expandedPackageIds.add(id);
+        }
+
+        renderWorkspace();
+      }
+
+      function toggleDeliverable(projectId, packageId, deliverableId) {
+        const id = String(deliverableId);
+
+        if (expandedDeliverableIds.has(id)) {
+          expandedDeliverableIds.delete(id);
+        } else {
+          expandedDeliverableIds.add(id);
+        }
+
+        renderWorkspace();
+      }
+
+      function restoreScrollPosition(scrollPosition) {
+        if (scrollPosition === null) {
+          return;
+        }
+
+        requestAnimationFrame(() => {
+          window.scrollTo({
+            top: scrollPosition,
+            left: 0,
+            behavior: "auto",
+          });
+        });
+      }
+
+      function renderWorkspace({ preserveScroll = true } = {}) {
+        if (!appData) {
+          return;
+        }
+
+        const scrollPosition = preserveScroll ? window.scrollY : null;
+
+        updateToolbarState();
+        renderPaginationWarning();
+
+        const container = document.getElementById("packages");
+
+        if (!appData.projects.length) {
+          container.innerHTML = `
+            <section class="state-panel">
+              No projects yet.
+            </section>
+          `;
+
+          restoreScrollPosition(scrollPosition);
+          return;
+        }
+
+        const visibleProjects = searchTerm
+          ? sortBySearchScore(
+              appData.projects.filter(projectHasSearchMatch),
+              searchScoreByProjectId,
+            )
+          : appData.projects;
+
+        if (!visibleProjects.length) {
+          container.innerHTML = `
+            <section class="state-panel">
+              No matching projects, packages or deliverables.
+            </section>
+          `;
+
+          restoreScrollPosition(scrollPosition);
+          return;
+        }
+
+        container.innerHTML = visibleProjects
+          .map((project) => {
+            const projectId = String(project.id);
+            const projectPanelId = `project-panel-${domId(projectId)}`;
+
+            const projectOpen =
+              expandedProjectIds.has(projectId) ||
+              Boolean(searchTerm && projectHasSearchMatch(project));
+
+            return `
+              <section
+                class="hierarchy-project ${projectOpen ? "is-open" : ""}"
+                data-project-id="${escapeHtml(projectId)}"
+              >
+                <button
+                  type="button"
+                  class="tree-row project-row"
+                  data-action="toggle-project"
+                  data-project-id="${escapeHtml(projectId)}"
+                  aria-expanded="${projectOpen}"
+                  aria-controls="${projectPanelId}"
+                >
+                  <span class="item-main">
+                    <span
+                      class="hierarchy-chevron ${projectOpen ? "open" : ""}"
+                      aria-hidden="true"
+                    >▶</span>
+
+                    <span class="item-name">
+                      ${highlightMatch(project.name)}
+                    </span>
+                  </span>
+
+                  <span class="item-meta">
+                    ${(project.packages || []).length}
+                    ${
+                      (project.packages || []).length === 1
+                        ? "Package"
+                        : "Packages"
+                    }
+                  </span>
+                </button>
+
+                ${
+                  projectOpen
+                    ? `
+                      <div id="${projectPanelId}">
+                        ${renderProjectPackages(project)}
+                      </div>
+                    `
+                    : ""
+                }
+              </section>
+            `;
+          })
+          .join("");
+
+        restoreScrollPosition(scrollPosition);
+      }
+
+      function renderProjectPackages(project) {
+        const visiblePackages = getVisiblePackages(project);
+
+        if (!visiblePackages.length) {
+          return `
+            <div class="hierarchy-children">
+              <div class="hierarchy-empty">
+                ${searchTerm ? "No matching packages." : "No packages yet."}
+              </div>
+            </div>
+          `;
+        }
+
+        return `
+          <div class="hierarchy-children">
+            <div class="hierarchy-section-title">
+              Packages
+            </div>
+
+            ${visiblePackages
+              .map((pkg) => {
+                const packageId = String(pkg.id);
+                const packagePanelId = `package-panel-${domId(packageId)}`;
+                const addFormId = `add-form-${domId(packageId)}`;
+
+                const packageHasSearchMatch =
+                  searchTerm && matchedPackageIds.has(packageId);
+
+                const packageOpen =
+                  expandedPackageIds.has(packageId) ||
+                  Boolean(packageHasSearchMatch);
+
+                const addFormOpen = openAddFormPackageIds.has(packageId);
+
+                return `
+                  <div
+                    class="hierarchy-package-branch ${
+                      packageOpen ? "is-open" : ""
+                    }"
+                    data-package-id="${escapeHtml(packageId)}"
+                  >
+                    <div class="hierarchy-package-row-shell">
+                      <button
+                        type="button"
+                        class="tree-row package-row"
+                        data-action="toggle-package"
+                        data-project-id="${escapeHtml(project.id)}"
+                        data-package-id="${escapeHtml(packageId)}"
+                        aria-expanded="${packageOpen}"
+                        aria-controls="${packagePanelId}"
+                      >
+                        <span class="item-main">
+                          <span
+                            class="hierarchy-chevron ${
+                              packageOpen ? "open" : ""
+                            }"
+                            aria-hidden="true"
+                          >▶</span>
+
+                          <span class="item-name">
+                            ${highlightMatch(pkg.name)}
+                          </span>
+                        </span>
+
+                        <span class="item-meta">
+                          ${(pkg.subitems || []).length}
+                          ${
+                            (pkg.subitems || []).length === 1
+                              ? "Deliverable"
+                              : "Deliverables"
+                          }
+                        </span>
+                      </button>
+
+                      ${
+                        packageOpen
+                          ? `
+                            <button
+                              type="button"
+                              class="inline-add-toggle"
+                              data-action="toggle-add"
+                              data-package-id="${escapeHtml(packageId)}"
+                              aria-expanded="${addFormOpen}"
+                              aria-controls="${addFormId}"
+                            >
+                              + Add
+                            </button>
+                          `
+                          : ""
+                      }
+                    </div>
+
+                    ${
+                      packageOpen
+                        ? `
+                          <div id="${packagePanelId}">
+                            ${renderPackageDeliverables(project, pkg)}
+                          </div>
+                        `
+                        : ""
+                    }
+                  </div>
+                `;
+              })
+              .join("")}
+          </div>
+        `;
+      }
+
+      function renderAddDeliverableForm(packageId) {
+        const safePackageId = escapeHtml(packageId);
+        const idSuffix = domId(packageId);
+
+        return `
+          <form
+            id="add-form-${idSuffix}"
+            class="inline-add-deliverable"
+            data-add-form
+            data-package-id="${safePackageId}"
+            novalidate
+          >
+            <div class="form-field">
+              <label
+                class="sr-only"
+                for="deliverable-name-${idSuffix}"
+              >
+                Deliverable name
+              </label>
+
+              <input
+                id="deliverable-name-${idSuffix}"
+                name="deliverableName"
+                type="text"
+                placeholder="Deliverable name"
+                autocomplete="off"
+                aria-describedby="deliverable-name-error-${idSuffix}"
+              />
+
+              <div
+                id="deliverable-name-error-${idSuffix}"
+                class="field-error"
+                data-error-for="name"
+                aria-live="polite"
+              ></div>
+            </div>
+
+            <div class="form-field">
+              <label
+                class="sr-only"
+                for="deliverable-category-${idSuffix}"
+              >
+                Category
+              </label>
+
+              <select
+                id="deliverable-category-${idSuffix}"
+                name="deliverableCategory"
+                aria-describedby="deliverable-category-error-${idSuffix}"
+              >
+                <option value="">Category</option>
+                <option value="Drawing">Drawing</option>
+                <option value="Calculation">Calculation</option>
+                <option value="Sketches">Sketches</option>
+                <option value="Tech Sub">Tech Sub</option>
+                <option value="Call-Off">Call-Off</option>
+              </select>
+
+              <div
+                id="deliverable-category-error-${idSuffix}"
+                class="field-error"
+                data-error-for="category"
+                aria-live="polite"
+              ></div>
+            </div>
+
+            <button
+              class="button-primary"
+              type="submit"
+            >
+              Add
+            </button>
+
+            <button
+              class="button-secondary"
+              type="button"
+              data-action="cancel-add"
+              data-package-id="${safePackageId}"
+            >
+              Cancel
+            </button>
+
+            <div
+              class="form-error"
+              data-form-error
+              aria-live="polite"
+            ></div>
+          </form>
+        `;
+      }
+
+      function renderPackageDeliverables(project, pkg) {
+        const packageId = String(pkg.id);
+        const visibleDeliverables = getVisibleDeliverables(project, pkg);
+
+        return `
+          <div class="hierarchy-package-content">
+            ${
+              openAddFormPackageIds.has(packageId)
+                ? renderAddDeliverableForm(packageId)
+                : ""
+            }
+
+            <div class="hierarchy-section-title">
+              Deliverables
+            </div>
+
+            <div class="hierarchy-deliverables">
+              ${
+                visibleDeliverables.length
+                  ? visibleDeliverables
+                      .map((deliverable) => {
+                        const deliverableId = String(deliverable.id);
+
+                        const revisionPanelId = `revision-panel-${domId(
+                          deliverableId,
+                        )}`;
+
+                        const deliverableOpen =
+                          expandedDeliverableIds.has(deliverableId) ||
+                          Boolean(
+                            searchTerm &&
+                            matchedDeliverableIds.has(deliverableId),
+                          );
+
+                        const category =
+                          deliverable.column_values?.find(
+                            (column) =>
+                              column.id === CONFIG.packageCategoryColumn,
+                          )?.text || "—";
+
+                        const isNew = highlightDeliverableId === deliverableId;
+
+                        return `
+                          <div
+                            class="deliverable-branch ${
+                              deliverableOpen ? "is-open" : ""
+                            } ${isNew ? "is-new" : ""}"
+                            data-deliverable-id="${escapeHtml(deliverableId)}"
+                          >
+                            <button
+                              type="button"
+                              class="tree-row deliverable-row"
+                              data-action="toggle-deliverable"
+                              data-project-id="${escapeHtml(project.id)}"
+                              data-package-id="${escapeHtml(pkg.id)}"
+                              data-deliverable-id="${escapeHtml(deliverableId)}"
+                              aria-expanded="${deliverableOpen}"
+                              aria-controls="${revisionPanelId}"
+                            >
+                              <span class="deliverable-main">
+                                <span
+                                  class="hierarchy-chevron ${
+                                    deliverableOpen ? "open" : ""
+                                  }"
+                                  aria-hidden="true"
+                                >▶</span>
+
+                                <span class="deliverable-name">
+                                  ${highlightMatch(deliverable.name)}
+                                </span>
+                              </span>
+
+                              <span class="deliverable-right">
+                                <span class="deliverable-type">
+                                  ${highlightMatch(category)}
+                                </span>
+                              </span>
+                            </button>
+
+                            ${
+                              deliverableOpen
+                                ? `
+                                  <div
+                                    id="${revisionPanelId}"
+                                    class="revision-inline"
+                                  >
+                                    ${renderRevisionSection(deliverableId)}
+                                  </div>
+                                `
+                                : ""
+                            }
+                          </div>
+                        `;
+                      })
+                      .join("")
+                  : `
+                    <div class="hierarchy-empty">
+                      ${
+                        !(pkg.subitems || []).length
+                          ? "No deliverables yet."
+                          : searchTerm
+                            ? "No matching deliverables."
+                            : "No deliverables yet."
+                      }
+                    </div>
+                  `
+              }
+            </div>
+          </div>
+        `;
+      }
+
+      async function updateInternalStatus(
+        revisionSubitemId,
+        status,
+        deliverableId,
+        selectElement,
+      ) {
+        const query = `
+                mutation (
+                  $boardId: ID!,
+                  $itemId: ID!,
+                  $columnId: String!,
+                  $value: String!
+                ) {
+                  change_simple_column_value(
+                    board_id: $boardId,
+                    item_id: $itemId,
+                    column_id: $columnId,
+                    value: $value
+                  ) {
+                    id
+                  }
+                }
+              `;
+
+        const previousValue = selectElement.dataset.currentValue || "";
+
+        expandedDeliverableIds.add(String(deliverableId));
+
+        selectElement.dataset.currentValue = status;
+
+        updateLocalRevisionColumn(revisionSubitemId, "color_mm6v5zh2", status);
+        buildSearchIndex();
+        refreshSearchResults();
+
+        applyStatusClass(selectElement, status);
+        syncRowControls(selectElement.closest("tr"));
+
+        saveInFlightCount += 1;
+        setSavingState(selectElement, true);
+
+        try {
+          const response = await monday.api(query, {
+            apiVersion: "2026-07",
+            variables: {
+              boardId: CONFIG.revisionsSubitemBoard,
+              itemId: revisionSubitemId,
+              columnId: "color_mm6v5zh2",
+              value: status,
+            },
+          });
+
+          if (response.errors) {
+            throw new Error(JSON.stringify(response.errors));
+          }
+        } catch (error) {
+          console.error("Failed to update Internal Status:", error);
+
+          selectElement.value = previousValue;
+          selectElement.dataset.currentValue = previousValue;
+
+          updateLocalRevisionColumn(
+            revisionSubitemId,
+            "color_mm6v5zh2",
+            previousValue,
+          );
+          buildSearchIndex();
+          refreshSearchResults();
+
+          applyStatusClass(selectElement, previousValue);
+
+          syncRowControls(selectElement.closest("tr"));
+
+          showToast(
+            "Action was not saved. The previous value has been restored.",
+          );
+        } finally {
+          saveInFlightCount = Math.max(0, saveInFlightCount - 1);
+
+          setSavingState(selectElement, false);
+        }
+      }
+
+      function getStatusClass(value) {
+        switch (value) {
+          case "A":
+            return "status-green";
+
+          case "B":
+            return "status-amber";
+
+          case "C":
+          case "Not Approved(Internally)":
+            return "status-red";
+
+          case "Issued":
+            return "status-blue";
+
+          case "Ready for Issue":
+            return "status-teal";
+
+          case "Draft":
+            return "status-draft";
+
+          case "Sent for Internal Review":
+            return "status-slate";
+
+          case "Void":
+            return "status-muted";
+
+          default:
+            return "";
+        }
+      }
+
+      function formatDate(value) {
+        if (!value || value === "—") {
+          return "—";
+        }
+
+        const datePart = value.split(" ")[0];
+        const [year, month, day] = datePart.split("-").map(Number);
+
+        if (!year || !month || !day) {
+          return value;
+        }
+
+        return new Intl.DateTimeFormat("en-GB", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        }).format(new Date(year, month - 1, day));
+      }
+
+      function renderRevisionSection(deliverableId) {
+        if (!deliverableId) {
+          return "";
+        }
+
+        const revisionRecord = revisionByDeliverableId.get(
+          String(deliverableId),
+        );
+
+        const visibleRevisions = revisionRecord?.subitems?.length
+          ? searchTerm
+            ? revisionRecord.subitems.filter((revision) =>
+                matchedRevisionIds.has(String(revision.id)),
+              )
+            : revisionRecord.subitems
+          : [];
+
+        return `
+          <div class="revision-inline-title">
+            Revisions
+          </div>
+
+          ${
+            visibleRevisions.length
+              ? `
+                <div class="revision-table-wrap">
+                  <table class="revision-table">
+                    <thead>
+                      <tr>
+                        <th>Revision</th>
+                        <th>Date Issued</th>
+                        <th>Status Received</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      ${[...visibleRevisions]
+                        .reverse()
+                        .map((revision) => {
+                          const revisionCode =
+                            revision.column_values.find(
+                              (column) => column.id === "text_mm6k63yk",
+                            )?.text || "—";
+
+                          const dateIssued =
+                            revision.column_values.find(
+                              (column) => column.id === "date_mm6krfrv",
+                            )?.text || "—";
+
+                          const statusReceived =
+                            revision.column_values.find(
+                              (column) => column.id === "color_mm6k5xec",
+                            )?.text || "—";
+
+                          const action =
+                            revision.column_values.find(
+                              (column) => column.id === "color_mm6v5zh2",
+                            )?.text || "—";
+
+                          const version =
+                            revision.column_values.find(
+                              (column) => column.id === "dropdown_mm6krj3c",
+                            )?.text || "";
+
+                          const statusValue =
+                            statusReceived === "—" ? "" : statusReceived;
+
+                          const actionValue = action === "—" ? "" : action;
+
+                          const isSuperseded = version === "Superseded";
+
+                          const statusDisabled =
+                            action !== "Issued" || isSuperseded;
+
+                          const statusTitle = isSuperseded
+                            ? "Superseded revisions cannot be changed"
+                            : action !== "Issued"
+                              ? "Available once Action is Issued"
+                              : "Status Received";
+
+                          const actionTitle = isSuperseded
+                            ? "Superseded revisions cannot be changed"
+                            : "Action";
+
+                          const rowClass =
+                            version === "Current"
+                              ? "revision-row-current"
+                              : isSuperseded
+                                ? "revision-row-superseded"
+                                : "";
+
+                          return `
+                            <tr
+                              class="${rowClass}"
+                              data-version="${escapeHtml(version)}"
+                              data-revision-id="${escapeHtml(revision.id)}"
+                            >
+                              <td
+                                class="revision-code-cell"
+                                data-label="Revision"
+                              >
+                                <span class="revision-code">
+                                  ${highlightMatch(revisionCode)}
+                                </span>
+
+                                ${
+                                  version === "Current"
+                                    ? `
+                                      <span class="current-badge">
+                                        Current
+                                      </span>
+                                    `
+                                    : isSuperseded
+                                      ? `
+                                        <span class="superseded-badge">
+                                          Superseded
+                                        </span>
+                                      `
+                                      : ""
+                                }
+                              </td>
+
+                              <td data-label="Date Issued">
+                                ${highlightMatch(formatDate(dateIssued))}
+                              </td>
+
+                              <td
+                                class="status-cell"
+                                data-label="Status Received"
+                              >
+                                <span
+                                  class="status-control"
+                                  title="${escapeHtml(statusTitle)}"
+                                >
+                                  <select
+                                    class="status-received-select ${getStatusClass(
+                                      statusReceived,
+                                    )} ${
+                                      valueMatchesSearch(statusReceived)
+                                        ? "search-field-match"
+                                        : ""
+                                    }"
+                                    data-action="change-status-received"
+                                    data-revision-id="${escapeHtml(
+                                      revision.id,
+                                    )}"
+                                    data-deliverable-id="${escapeHtml(
+                                      deliverableId,
+                                    )}"
+                                    data-current-value="${escapeHtml(
+                                      statusValue,
+                                    )}"
+                                    data-saving="false"
+                                    aria-label="Status Received"
+                                    title="${escapeHtml(statusTitle)}"
+                                    ${statusDisabled ? "disabled" : ""}
+                                  >
+                                    <option
+                                      value=""
+                                      ${
+                                        statusReceived === "—" ? "selected" : ""
+                                      }
+                                    >
+                                      —
+                                    </option>
+
+                                    <option
+                                      value="A"
+                                      ${
+                                        statusReceived === "A" ? "selected" : ""
+                                      }
+                                    >
+                                      A
+                                    </option>
+
+                                    <option
+                                      value="B"
+                                      ${
+                                        statusReceived === "B" ? "selected" : ""
+                                      }
+                                    >
+                                      B
+                                    </option>
+
+                                    <option
+                                      value="C"
+                                      ${
+                                        statusReceived === "C" ? "selected" : ""
+                                      }
+                                    >
+                                      C
+                                    </option>
+
+                                    <option
+                                      value="Void"
+                                      ${
+                                        statusReceived === "Void"
+                                          ? "selected"
+                                          : ""
+                                      }
+                                    >
+                                      Void
+                                    </option>
+                                  </select>
+
+                                  <span
+                                    class="save-indicator"
+                                    aria-live="polite"
+                                  >
+                                    <span
+                                      class="save-spinner"
+                                      aria-hidden="true"
+                                    ></span>
+                                    <span>Saving…</span>
+                                  </span>
+                                </span>
+                              </td>
+
+                              <td
+                                class="status-cell"
+                                data-label="Action"
+                              >
+                                <span
+                                  class="status-control"
+                                  title="${escapeHtml(actionTitle)}"
+                                >
+                                  <select
+                                    class="action-select ${getStatusClass(
+                                      action,
+                                    )} ${
+                                      valueMatchesSearch(action)
+                                        ? "search-field-match"
+                                        : ""
+                                    }"
+                                    data-action="change-action"
+                                    data-revision-id="${escapeHtml(
+                                      revision.id,
+                                    )}"
+                                    data-deliverable-id="${escapeHtml(
+                                      deliverableId,
+                                    )}"
+                                    data-current-value="${escapeHtml(
+                                      actionValue,
+                                    )}"
+                                    data-saving="false"
+                                    aria-label="Action"
+                                    title="${escapeHtml(actionTitle)}"
+                                    ${isSuperseded ? "disabled" : ""}
+                                  >
+                                    <option
+                                      value=""
+                                      ${action === "—" ? "selected" : ""}
+                                    >
+                                      —
+                                    </option>
+
+                                    <option
+                                      value="Draft"
+                                      ${action === "Draft" ? "selected" : ""}
+                                    >
+                                      Draft
+                                    </option>
+
+                                    <option
+                                      value="Sent for Internal Review"
+                                      ${
+                                        action === "Sent for Internal Review"
+                                          ? "selected"
+                                          : ""
+                                      }
+                                    >
+                                      Sent for Internal Review
+                                    </option>
+
+                                    <option
+                                      value="Ready for Issue"
+                                      ${
+                                        action === "Ready for Issue"
+                                          ? "selected"
+                                          : ""
+                                      }
+                                    >
+                                      Ready for Issue
+                                    </option>
+
+                                    <option
+                                      value="Not Approved(Internally)"
+                                      ${
+                                        action === "Not Approved(Internally)"
+                                          ? "selected"
+                                          : ""
+                                      }
+                                    >
+                                      Not Approved(Internally)
+                                    </option>
+
+                                    <option
+                                      value="Issued"
+                                      ${action === "Issued" ? "selected" : ""}
+                                    >
+                                      Issued
+                                    </option>
+                                  </select>
+
+                                  <span
+                                    class="save-indicator"
+                                    aria-live="polite"
+                                  >
+                                    <span
+                                      class="save-spinner"
+                                      aria-hidden="true"
+                                    ></span>
+                                    <span>Saving…</span>
+                                  </span>
+                                </span>
+                              </td>
+                            </tr>
+                          `;
+                        })
+                        .join("")}
+                    </tbody>
+                  </table>
+                </div>
+              `
+              : `
+                <div class="hierarchy-empty">
+                  ${searchTerm ? "No matching revisions." : "No revisions found."}
+                </div>
+              `
+          }
+        `;
+      }
+
+      function findAddForm(packageId) {
+        return Array.from(document.querySelectorAll("[data-add-form]")).find(
+          (form) => form.dataset.packageId === String(packageId),
+        );
+      }
+
+      function focusAddForm(packageId) {
+        requestAnimationFrame(() => {
+          const form = findAddForm(packageId);
+
+          form?.querySelector('[name="deliverableName"]')?.focus();
+        });
+      }
+
+      function setFormSaving(form, isSaving) {
+        if (!form) {
+          return;
+        }
+
+        const controls = form.querySelectorAll("input, select, button");
+
+        controls.forEach((control) => {
+          control.disabled = isSaving;
+        });
+
+        const submitButton = form.querySelector('button[type="submit"]');
+
+        if (submitButton) {
+          submitButton.textContent = isSaving ? "Adding…" : "Add";
+        }
+      }
+
+      function clearFormErrors(form) {
+        form
+          ?.querySelectorAll(".field-error, .form-error")
+          .forEach((element) => {
+            element.textContent = "";
+          });
+      }
+
+      function toggleAddDeliverable(packageId) {
+        const id = String(packageId);
+
+        if (openAddFormPackageIds.has(id)) {
+          openAddFormPackageIds.delete(id);
+          renderWorkspace();
+          return;
+        }
+
+        openAddFormPackageIds.add(id);
+        expandedPackageIds.add(id);
+
+        renderWorkspace();
+        focusAddForm(id);
+      }
+
+      function cancelAddDeliverable(packageId) {
+        openAddFormPackageIds.delete(String(packageId));
+
+        renderWorkspace();
+      }
+
+      function focusNewDeliverable(deliverableId) {
+        requestAnimationFrame(() => {
+          const target = Array.from(
+            document.querySelectorAll("[data-deliverable-id]"),
+          ).find(
+            (element) =>
+              element.dataset.deliverableId === String(deliverableId) &&
+              element.classList.contains("deliverable-branch"),
+          );
+
+          if (!target) {
+            return;
+          }
+
+          const reducedMotion = window.matchMedia(
+            "(prefers-reduced-motion: reduce)",
+          ).matches;
+
+          target.scrollIntoView({
+            block: "center",
+            behavior: reducedMotion ? "auto" : "smooth",
+          });
+
+          window.setTimeout(() => {
+            target.classList.remove("is-new");
+
+            if (highlightDeliverableId === String(deliverableId)) {
+              highlightDeliverableId = null;
+            }
+          }, 1800);
+        });
+      }
+
+      async function submitDeliverable(packageId, form) {
+        if (!form) {
+          return;
+        }
+
+        clearFormErrors(form);
+
+        const nameInput = form.querySelector('[name="deliverableName"]');
+
+        const categoryInput = form.querySelector(
+          '[name="deliverableCategory"]',
+        );
+
+        const name = nameInput.value.trim();
+        const category = categoryInput.value;
+
+        let valid = true;
+
+        if (!name) {
+          form.querySelector('[data-error-for="name"]').textContent =
+            "Enter a deliverable name.";
+
+          valid = false;
+        }
+
+        if (!category) {
+          form.querySelector('[data-error-for="category"]').textContent =
+            "Select a category.";
+
+          valid = false;
+        }
+
+        if (!valid) {
+          if (!name) {
+            nameInput.focus();
+          } else {
+            categoryInput.focus();
+          }
+
+          return;
+        }
+
+        setFormSaving(form, true);
+        saveInFlightCount += 1;
+
+        try {
+          const deliverable = await createDeliverable(
+            packageId,
+            name,
+            category,
+          );
+
+          const freshData = await loadAppData();
+          setAppData(freshData);
+
+          expandedPackageIds.add(String(packageId));
+
+          expandedDeliverableIds.add(String(deliverable.id));
+
+          openAddFormPackageIds.delete(String(packageId));
+
+          highlightDeliverableId = String(deliverable.id);
+
+          renderWorkspace({
+            preserveScroll: false,
+          });
+
+          focusNewDeliverable(deliverable.id);
+
+          showToast("Deliverable added.", "success");
+        } catch (error) {
+          console.error("Failed to add deliverable:", error);
+
+          if (error.partialDeliverable) {
+            try {
+              const freshData = await loadAppData();
+
+              setAppData(freshData);
+
+              expandedPackageIds.add(String(packageId));
+
+              expandedDeliverableIds.add(String(error.partialDeliverable.id));
+
+              openAddFormPackageIds.delete(String(packageId));
+
+              highlightDeliverableId = String(error.partialDeliverable.id);
+
+              renderWorkspace({
+                preserveScroll: false,
+              });
+
+              focusNewDeliverable(error.partialDeliverable.id);
+            } catch (refreshError) {
+              console.error(
+                "Could not refresh after partial deliverable creation:",
+                refreshError,
+              );
+            }
+
+            showToast(
+              `"${name}" was created, but its category could not be saved. Update the category in monday.com or try again.`,
+              "warning",
+            );
+          } else {
+            const formError = form.querySelector("[data-form-error]");
+
+            if (formError) {
+              formError.textContent =
+                "Could not add the deliverable. Try again.";
+            }
+
+            showToast("The deliverable could not be added.");
+          }
+        } finally {
+          saveInFlightCount = Math.max(0, saveInFlightCount - 1);
+
+          if (document.contains(form)) {
+            setFormSaving(form, false);
+          }
+        }
+      }
+
+      async function syncFromMonday() {
+        if (
+          isSyncing ||
+          saveInFlightCount > 0 ||
+          document.visibilityState !== "visible"
+        ) {
+          return;
+        }
+
+        const activeElement = document.activeElement;
+
+        if (
+          activeElement &&
+          ["INPUT", "SELECT", "TEXTAREA"].includes(activeElement.tagName)
+        ) {
+          return;
+        }
+
+        try {
+          isSyncing = true;
+
+          const freshData = await loadAppData();
+
+          if (JSON.stringify(freshData) === JSON.stringify(appData)) {
+            renderPaginationWarning();
+            return;
+          }
+
+          setAppData(freshData);
+
+          renderWorkspace();
+        } catch (error) {
+          console.error("Live sync failed:", error);
+        } finally {
+          isSyncing = false;
+        }
+      }
+
+      function startLiveSync() {
+        if (liveSyncStarted) {
+          return;
+        }
+
+        liveSyncStarted = true;
+
+        monday.listen("events", (response) => {
+          const eventType = response.data?.type;
+
+          if (
+            eventType === "change_column_value" ||
+            eventType === "change_column_values" ||
+            eventType === "new_items"
+          ) {
+            syncFromMonday();
+          }
+        });
+
+        window.setInterval(() => {
+          syncFromMonday();
+        }, 20000);
+
+        document.addEventListener("visibilitychange", () => {
+          if (document.visibilityState === "visible") {
+            syncFromMonday();
+          }
+        });
+      }
+
+      function renderLoadingState() {
+        const notice = document.getElementById("appNotice");
+
+        if (notice) {
+          notice.hidden = true;
+        }
+
+        document.getElementById("packages").innerHTML = `
+          <div class="skeleton-row" aria-hidden="true"></div>
+          <div class="skeleton-row" aria-hidden="true"></div>
+          <div class="skeleton-row" aria-hidden="true"></div>
+          <div class="skeleton-row" aria-hidden="true"></div>
+        `;
+      }
+
+      function renderErrorState() {
+        document.getElementById("packages").innerHTML = `
+          <section class="state-panel">
+            <h2>Could not load Design Management</h2>
+            <p>
+              Check the connection and try loading the board again.
+            </p>
+
+            <button
+              type="button"
+              class="button-primary"
+              data-action="retry"
+            >
+              Retry
+            </button>
+          </section>
+        `;
+      }
+
+      function setupInteractions() {
+        if (interactionsStarted) {
+          return;
+        }
+
+        interactionsStarted = true;
+
+        const searchInput = document.getElementById("hierarchySearch");
+
+        searchInput?.addEventListener("input", (event) => {
+          handleSearchInput(event.target.value);
+        });
+
+        searchInput?.addEventListener("keydown", (event) => {
+          if (event.key === "Escape") {
+            event.preventDefault();
+            clearSearch();
+            searchInput.focus();
+          }
+        });
+
+        document.addEventListener("click", (event) => {
+          const control = event.target.closest("[data-action]");
+
+          if (!control) {
+            return;
+          }
+
+          const action = control.dataset.action;
+
+          switch (action) {
+            case "toggle-project":
+              toggleProject(control.dataset.projectId);
+              break;
+
+            case "toggle-package":
+              togglePackage(
+                control.dataset.projectId,
+                control.dataset.packageId,
+              );
+              break;
+
+            case "toggle-deliverable":
+              toggleDeliverable(
+                control.dataset.projectId,
+                control.dataset.packageId,
+                control.dataset.deliverableId,
+              );
+              break;
+
+            case "toggle-all":
+              toggleAll();
+              break;
+
+            case "clear-search":
+              clearSearch();
+              searchInput?.focus();
+              break;
+
+            case "toggle-add":
+              toggleAddDeliverable(control.dataset.packageId);
+              break;
+
+            case "cancel-add":
+              cancelAddDeliverable(control.dataset.packageId);
+              break;
+
+            case "retry":
+              init();
+              break;
+          }
+        });
+
+        document.addEventListener("change", (event) => {
+          const select = event.target;
+
+          if (select.matches('[data-action="change-status-received"]')) {
+            updateStatusReceived(
+              select.dataset.revisionId,
+              select.value,
+              select.dataset.deliverableId,
+              select,
+            );
+
+            return;
+          }
+
+          if (select.matches('[data-action="change-action"]')) {
+            updateInternalStatus(
+              select.dataset.revisionId,
+              select.value,
+              select.dataset.deliverableId,
+              select,
+            );
+          }
+        });
+
+        document.addEventListener("submit", (event) => {
+          const form = event.target.closest("[data-add-form]");
+
+          if (!form) {
+            return;
+          }
+
+          event.preventDefault();
+
+          submitDeliverable(form.dataset.packageId, form);
+        });
+
+        document.addEventListener("keydown", (event) => {
+          const target = event.target;
+
+          const isEditable =
+            target instanceof HTMLInputElement ||
+            target instanceof HTMLTextAreaElement ||
+            target instanceof HTMLSelectElement ||
+            target?.isContentEditable;
+
+          if (
+            event.key === "/" &&
+            !isEditable &&
+            !event.ctrlKey &&
+            !event.metaKey &&
+            !event.altKey
+          ) {
+            event.preventDefault();
+            searchInput?.focus();
+            searchInput?.select();
+          }
+        });
+      }
+
+      async function init() {
+        setupInteractions();
+        renderLoadingState();
+
+        try {
+          const freshData = await loadAppData();
+
+          setAppData(freshData);
+
+          console.log("App Data:", appData);
+
+          renderWorkspace({
+            preserveScroll: false,
+          });
+
+          startLiveSync();
+        } catch (error) {
+          console.error("Error:", error);
+          renderErrorState();
+        }
+      }
+
+      init();
+    </script>
+  </body>
+</html>
