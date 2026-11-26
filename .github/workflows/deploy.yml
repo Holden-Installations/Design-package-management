@@ -19,6 +19,6 @@ jobs:
     uses: Holden-Installations/shared-workflows/.github/workflows/monday-deploy.yml@main
     with:
       app_id: '12222399'
-      app_name: 'Desing Package Management'
+      app_name: 'Holden Design'
     secrets:
       MONDAY_API_TOKEN: ${{ secrets.MONDAY_API_TOKEN }}
